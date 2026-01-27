@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  wd-postgres:
+    image: mirror.gcr.io/postgres:16.4-alpine
+    hostname: wd-postgres
+    container_name: wd-postgres
+    restart: unless-stopped
+    environment:
+      # set up this variables before run the docker compose command
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+    ports:
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+
+volumes:
+  pg-data:
