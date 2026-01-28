@@ -6,6 +6,7 @@ import com.example.waterdelivery.model.User;
 import com.example.waterdelivery.model.UserRole;
 import com.example.waterdelivery.repository.UserRepository;
 import com.example.waterdelivery.security.JwtService;
+import jakarta.transaction.Transactional;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -18,6 +19,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class AuthService {
 
     private final AuthenticationManager authenticationManager;
