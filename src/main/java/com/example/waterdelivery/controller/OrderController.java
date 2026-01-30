@@ -9,6 +9,7 @@ import com.example.waterdelivery.security.CustomUserDetails;
 import com.example.waterdelivery.security.annotation.IsAdmin;
 import com.example.waterdelivery.security.annotation.IsUser;
 import com.example.waterdelivery.service.OrderService;
+import com.example.waterdelivery.service.OrderSseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +17,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.UUID;
 
@@ -27,12 +29,13 @@ public class OrderController {
 
     private final OrderService orderService;
     private final OrderMapper orderMapper;
+    private final OrderSseService sseService;
 
     @PostMapping("/order")
     public ResponseEntity<OrderDto> createOrder(
             @RequestBody CreateOrderRequest createOrderRequest,
             @AuthenticationPrincipal CustomUserDetails userDetails
-            ) {
+    ) {
         Order order = orderService.createOrderFromBasket(
                 userDetails.getUser().getId(),
                 createOrderRequest.getDeliveryAddress(),
@@ -45,7 +48,7 @@ public class OrderController {
     public ResponseEntity<Page<OrderDto>> getUserOrders(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @PageableDefault Pageable pageable
-            ) {
+    ) {
         Page<OrderDto> orders = orderService.getUserOrders(userDetails.getUser().getId(), pageable)
                 .map(orderMapper::toDto);
         return ResponseEntity.ok(orders);
@@ -76,5 +79,12 @@ public class OrderController {
             @RequestBody UpdateOrderRequest updateDto) {
         Order order = orderService.updateOrder(orderId, updateDto.getStatus());
         return ResponseEntity.ok(orderMapper.toDto(order));
+    }
+
+    @GetMapping("/order/sse")
+    public SseEmitter subscribe(
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+        return sseService.subscribe(userDetails.getUser().getId());
     }
 }

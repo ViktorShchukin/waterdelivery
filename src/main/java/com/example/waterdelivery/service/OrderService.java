@@ -3,6 +3,7 @@ package com.example.waterdelivery.service;
 import com.example.waterdelivery.model.Basket;
 import com.example.waterdelivery.model.Order;
 import com.example.waterdelivery.model.OrderStatus;
+import com.example.waterdelivery.model.OrderStatusMessage;
 import com.example.waterdelivery.repository.OrderRepository;
 import com.example.waterdelivery.service.util.OrderTool;
 import jakarta.transaction.Transactional;
@@ -21,6 +22,7 @@ public class OrderService {
     private final BasketService basketService;
     private final OrderTool orderTool;
     private final OrderRepository orderRepository;
+    private final OrderSseService sseService;
 
     @Transactional
     public Order createOrderFromBasket(UUID userId, String deliveryAddress, ZonedDateTime deliveryDateTime) {
@@ -47,6 +49,14 @@ public class OrderService {
         var order = getOrderById(orderId);
         order.setOrderStatus(status);
 
-        return orderRepository.save(order);
+        var orderUpdated = orderRepository.save(order);
+        sseService.send(
+                order.getUser().getId(),
+                OrderStatusMessage.builder()
+                        .orderId(order.getId())
+                        .status(status)
+                        .changeAt(ZonedDateTime.now())
+                        .build());
+        return orderUpdated;
     }
 }

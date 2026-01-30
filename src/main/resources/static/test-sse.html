@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SSE Order Status Test</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f7fa;
+            padding: 30px;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+        }
+
+        input, button {
+            padding: 8px;
+            font-size: 14px;
+        }
+
+        input {
+            width: 600px;
+        }
+
+        button {
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        #status {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        #events {
+            margin-top: 20px;
+            background: #fff;
+            padding: 15px;
+            border-radius: 6px;
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+        }
+
+        .event {
+            border-bottom: 1px solid #eee;
+            padding: 8px 0;
+        }
+
+        .event:last-child {
+            border-bottom: none;
+        }
+
+        .time {
+            color: #888;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>📡 SSE Order Status Test</h1>
+
+<p>Paste your <strong>JWT token</strong> below and connect.</p>
+
+<input
+        id="token"
+        type="text"
+        placeholder="Bearer eyJhbGciOiJIUzI1NiJ9..."
+/>
+
+<button onclick="connect()">Connect</button>
+<button onclick="disconnect()">Disconnect</button>
+
+<div id="status">Status: ❌ Disconnected</div>
+
+<div id="events"></div>
+
+<script>
+    let eventSource = null;
+
+    function connect() {
+        const tokenInput = document.getElementById("token").value.trim();
+
+        if (!tokenInput) {
+            alert("Please enter JWT token");
+            return;
+        }
+
+        // Browser EventSource does NOT support custom headers,
+        // so we pass token as query param (acceptable for testing)
+        const url = `/user/order/sse?token=${encodeURIComponent(tokenInput)}`;
+
+        eventSource = new EventSource(url);
+
+        document.getElementById("status").innerText =
+            "Status: 🟡 Connecting...";
+
+        eventSource.onopen = () => {
+            document.getElementById("status").innerText =
+                "Status: ✅ Connected";
+        };
+
+        eventSource.onerror = () => {
+            document.getElementById("status").innerText =
+                "Status: 🔴 Disconnected (reconnecting...)";
+        };
+
+        eventSource.addEventListener("change-order-status", event => {
+            const data = JSON.parse(event.data);
+            addEvent(data);
+        });
+
+        // Optional: receive heartbeats (comment events)
+        eventSource.onmessage = event => {
+            if (!event.data) return;
+        };
+    }
+
+    function disconnect() {
+        if (eventSource) {
+            eventSource.close();
+            eventSource = null;
+        }
+
+        document.getElementById("status").innerText =
+            "Status: ❌ Disconnected";
+    }
+
+    function addEvent(data) {
+        const container = document.getElementById("events");
+
+        const div = document.createElement("div");
+        div.className = "event";
+
+        div.innerHTML = `
+            <div><strong>Order ID:</strong> ${data.orderId}</div>
+            <div><strong>Status:</strong> ${data.status}</div>
+            <div class="time">${data.changedAt}</div>
+        `;
+
+        container.prepend(div);
+    }
+</script>
+
+</body>
+</html>
