@@ -9,7 +9,7 @@ Events (SSE).
 
 ## Build and run
 
-After app start automatically crete user with login 
+After app start automatically create user with login
 "admin" and password "admin".
 
 ### docker compose
@@ -21,7 +21,7 @@ docker-compose up
 ```
 
 This command will create and statrs containers with
-postgresql databese and app. Postgres will be available on
+postgresql database and app. Postgres will be available on
 jdbc:postgresql://localhost:5433/postgres.
 App will be available on http://localhost:8081
 
@@ -71,7 +71,7 @@ java -jar ./target/waterdelivery
 | DELETE | /user/basket                                       | JWT         | Delete basket                           |
 | POST   | /user/order                                        | JWT         | Create order from basket                |
 | GET    | /user/order                                        | JWT         | Get current user's orders               |
-| GET    | /user/{userid}/order                               | JWT (ADMIN) | Get all orders by user id               |               
+| GET    | /user/{userId}/order                               | JWT (ADMIN) | Get all orders by user id               |               
 | GET    | /user/order/{id}                                   | JWT         | Get order by id                         |
 | PUT    | /user/order/{id}                                   | JWT (ADMIN) | Update order status                     |
 | GET    | /user/order/sse?token={jwt-token}                  | JWT         | Subscribe to order status updates (SSE) |
@@ -89,7 +89,7 @@ Roles
 
 Header:
 
-- Authorization Bearer {jwt-token}
+- Authorization: Bearer {jwt-token}
 
 Query parameter:
 
@@ -109,7 +109,7 @@ None
 ```json
 {
   "login": "user",
-  "password": "maypassword"
+  "password": "mypassword"
 }
 ```
 
@@ -591,12 +591,12 @@ Bearer JWT
 }
 ```
 
-### GET /user/{user-id}/order
+### GET /user/{userId}/order
 
 Get orders by user id.
 
 **Authentication**
-Bearer JWT
+Bearer JWT (ROLE_ADMIN)
 
 **Response body**
 
@@ -700,7 +700,7 @@ Bearer JWT (ROLE_ADMIN)
 
 ### SSE
 
-### GET /user/order/sse
+### GET /user/order/sse?token={jwt-token}
 
 Subscribe to real-time order status updates using Server-Sent Events.
 
