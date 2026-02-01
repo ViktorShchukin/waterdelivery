@@ -37,7 +37,7 @@ public class OrderService {
 
     public Order getOrderById(UUID orderId) {
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new ResourceNotFoundException("Order not found")); // TODO normal exception
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
 
         return order;
     }
