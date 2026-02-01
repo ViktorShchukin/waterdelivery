@@ -7,13 +7,25 @@ services:
     container_name: wd-postgres
     restart: unless-stopped
     environment:
-      # set up this variables before run the docker compose command
-      - POSTGRES_USER
-      - POSTGRES_PASSWORD
+      # i know that password should be retrieved from secret storage, but for simplicity i put it here
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
     ports:
       - "127.0.0.1:5433:5432"
     volumes:
       - pg-data:/var/lib/postgresql/data
+
+  wd-app:
+    build: .
+    environment:
+      - # i know that password should be retrieved from secret storage, but for simplicity i put it here
+      - WD_DB_PASSWORD=postgres
+      - WD_DB_URL=jdbc:postgresql://wd-postgres:5432/postgres
+      - WD_DB_USERNAME=postgres
+    depends_on:
+      - wd-postgres
+    ports:
+      - "8081:8080"
 
 volumes:
   pg-data:
