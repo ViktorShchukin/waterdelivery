@@ -18,7 +18,7 @@ services:
   wd-app:
     build: .
     environment:
-      - # i know that password should be retrieved from secret storage, but for simplicity i put it here
+      # i know that password should be retrieved from secret storage, but for simplicity i put it here
       - WD_DB_PASSWORD=postgres
       - WD_DB_URL=jdbc:postgresql://wd-postgres:5432/postgres
       - WD_DB_USERNAME=postgres
