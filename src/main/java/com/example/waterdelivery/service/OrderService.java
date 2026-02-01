@@ -1,5 +1,6 @@
 package com.example.waterdelivery.service;
 
+import com.example.waterdelivery.exception.ResourceNotFoundException;
 import com.example.waterdelivery.model.Basket;
 import com.example.waterdelivery.model.Order;
 import com.example.waterdelivery.model.OrderStatus;
@@ -36,7 +37,7 @@ public class OrderService {
 
     public Order getOrderById(UUID orderId) {
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order not found")); // TODO normal exception
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found")); // TODO normal exception
 
         return order;
     }

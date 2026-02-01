@@ -1,11 +1,11 @@
 package com.example.waterdelivery.service;
 
+import com.example.waterdelivery.exception.ResourceNotFoundException;
 import com.example.waterdelivery.model.Basket;
 import com.example.waterdelivery.model.BasketItem;
 import com.example.waterdelivery.model.Product;
 import com.example.waterdelivery.model.User;
 import com.example.waterdelivery.repository.BasketRepository;
-import com.example.waterdelivery.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,15 +18,15 @@ import java.util.UUID;
 public class BasketService {
 
     private final BasketRepository basketRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final ProductService productService;
 
     public Basket createBasket(UUID userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found")); // TODO craete user service
+        User user = userService.findById(userId);
 
-        if (basketRepository.findByUserId(userId).isPresent()) {
-            throw new RuntimeException("User already has a basket");
+        var check = basketRepository.findByUserId(userId);
+        if (check.isPresent()) {
+            return check.get();
         }
 
         Basket basket = Basket.builder()
@@ -41,7 +41,7 @@ public class BasketService {
         Basket basket = getBasket(userId);
 
         Product product = productService.getById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
 
         basket.getItems().stream()
                 .filter(item -> item.getProduct().getId().equals(productId))
@@ -97,7 +97,7 @@ public class BasketService {
 
     public Basket getBasket(UUID userId) {
         Basket basket = basketRepository.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("Basket not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Basket not found"));
 
         return basket;
     }

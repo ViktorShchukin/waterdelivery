@@ -1,5 +1,7 @@
 package com.example.waterdelivery.service;
 
+import com.example.waterdelivery.exception.ResourceNotFoundException;
+import com.example.waterdelivery.exception.UserAlredyExist;
 import com.example.waterdelivery.model.AuthResult;
 import com.example.waterdelivery.model.Role;
 import com.example.waterdelivery.model.User;
@@ -48,7 +50,7 @@ public class AuthService {
         );
 
         User user = userRepository.findByLogin(login)
-                .orElseThrow(() -> new RuntimeException("User not found")); // TODO create normal exceptions
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         String token = jwtService.generateToken(authentication);
 
@@ -69,7 +71,7 @@ public class AuthService {
 
     public User registerUser(String login, String password, Set<Role> roles) {
         if (userRepository.findByLogin(login).isPresent()) {
-            throw new RuntimeException("Email already in use"); // TODO narmal exception
+            throw new UserAlredyExist("Login already in use");
         }
 
 
