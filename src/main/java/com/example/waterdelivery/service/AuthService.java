@@ -62,6 +62,11 @@ public class AuthService {
         return userRepository.existsBy();
     }
 
+    public User registerUser(String login, String password) {
+        var roles = Set.of(Role.ROLE_USER);
+        return registerUser(login, password, roles);
+    }
+
     public User registerUser(String login, String password, Set<Role> roles) {
         if (userRepository.findByLogin(login).isPresent()) {
             throw new RuntimeException("Email already in use"); // TODO narmal exception
