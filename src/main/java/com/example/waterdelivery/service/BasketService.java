@@ -83,7 +83,11 @@ public class BasketService {
             basket.getItems().stream()
                     .filter(item -> item.getProduct().getId().equals(productId))
                     .findFirst()
-                    .ifPresent(item -> item.setQuantity(quantity));
+                    .map(item -> {
+                        item.setQuantity(quantity);
+                        return item;
+                    })
+                    .orElseThrow(() -> new ResourceNotFoundException("There is no such product in basket"));
             return basketRepository.save(basket);
         }
 

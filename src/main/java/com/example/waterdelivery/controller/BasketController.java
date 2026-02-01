@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/basket")
+@RequestMapping("user/basket")
 @RequiredArgsConstructor
 @IsUser
 public class BasketController {
@@ -21,7 +21,7 @@ public class BasketController {
     private final BasketService basketService;
     private final BasketMapper basketMapper;
 
-    @PostMapping("/create")
+    @PostMapping()
     public ResponseEntity<BasketDto> createBasket(
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
