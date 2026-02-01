@@ -17,6 +17,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class OrderService {
 
     private final BasketService basketService;
@@ -24,7 +25,6 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderSseService sseService;
 
-    @Transactional
     public Order createOrderFromBasket(UUID userId, String deliveryAddress, ZonedDateTime deliveryDateTime) {
         Basket basket = basketService.getBasket(userId);
 

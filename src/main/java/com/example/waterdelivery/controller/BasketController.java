@@ -51,7 +51,7 @@ public class BasketController {
     @PutMapping("/update-product/{productId}")
     public ResponseEntity<BasketDto> updateProductQuantity(
             @PathVariable UUID productId,
-            @RequestParam Long quantity,
+            @RequestParam(required = true) Long quantity,
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
         var basket = basketService.updateProductQuantity(userDetails.getUser().getId(), productId, quantity);

@@ -1,6 +1,7 @@
 package com.example.waterdelivery.service;
 
 import com.example.waterdelivery.model.OrderStatusMessage;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -12,6 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @Slf4j
+@Transactional
 public class OrderSseService {
     private final Map<UUID, SseEmitter> emitters =
             new ConcurrentHashMap<>();

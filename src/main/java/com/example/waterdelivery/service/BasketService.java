@@ -14,13 +14,13 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class BasketService {
 
     private final BasketRepository basketRepository;
     private final UserRepository userRepository;
     private final ProductService productService;
 
-    @Transactional
     public Basket createBasket(UUID userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found")); // TODO craete user service
@@ -37,7 +37,6 @@ public class BasketService {
         return basketRepository.save(basket);
     }
 
-    @Transactional
     public Basket addProductToBasket(UUID userId, UUID productId, Long quantity) {
         Basket basket = getBasket(userId);
 
@@ -63,7 +62,6 @@ public class BasketService {
         return basketRepository.save(basket);
     }
 
-    @Transactional
     public Basket removeProductFromBasket(UUID userId, UUID productId) {
         Basket basket = getBasket(userId);
 
@@ -75,7 +73,6 @@ public class BasketService {
         return basketRepository.save(basket);
     }
 
-    @Transactional
     public Basket updateProductQuantity(UUID userId, UUID productId, Long quantity) {
 
         if (quantity <= 0) {
@@ -92,14 +89,12 @@ public class BasketService {
 
     }
 
-    @Transactional
     public void deleteBasket(UUID userId) {
         Basket basket = getBasket(userId);
 
         basketRepository.delete(basket);
     }
 
-    @Transactional
     public Basket getBasket(UUID userId) {
         Basket basket = basketRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("Basket not found"));
