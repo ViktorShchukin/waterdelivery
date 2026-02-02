@@ -22,8 +22,8 @@ docker-compose up
 
 This command will create and statrs containers with
 postgresql database and app. Postgres will be available on
-jdbc:postgresql://localhost:5433/postgres.
-App will be available on http://localhost:8081
+jdbc:postgresql://localhost:5432/postgres.
+App will be available on http://localhost:8080
 
 ### Manual
 
@@ -49,7 +49,7 @@ then you can build and run the app
 
 ```bash
 mvn package
-java -jar ./target/waterdelivery
+java -jar ./target/waterdelivery-0.0.1-SNAPSHOT.jar
 ```
 
 After run app will be available on http://localhost:8080
