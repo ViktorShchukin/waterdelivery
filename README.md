@@ -7,7 +7,9 @@ JWT-based authentication, role-based authorization,
 and real-time order status notifications using Server-Sent
 Events (SSE).
 
-The project is deployed and publicly accessible at: https://ppudgy.ru:8080/water/ 
+The project is deployed and publicly accessible 
+at: https://ppudgy.ru:8080/water/  
+Credentials: (login: admin, password: admin)
 
 ## Build and run
 
