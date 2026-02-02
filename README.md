@@ -43,7 +43,7 @@ List of variables:
 |----------------|---------------|-------------------------------------------|
 | WD_DB_PASSWORD | -             | postgres                                  |
 | WD_DB_USERNAME | -             | postgres                                  |
-| WD_DB_URL      | -             | jdbc:postgresql://localhost:5433/postgres |
+| WD_DB_URL      | -             | jdbc:postgresql://localhost:5432/postgres |
 
 then you can build and run the app
 
@@ -51,6 +51,8 @@ then you can build and run the app
 mvn package
 java -jar ./target/waterdelivery
 ```
+
+After run app will be available on http://localhost:8080
 
 ## API
 
