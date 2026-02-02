@@ -562,7 +562,7 @@
             }
 
             try {
-                const res = await fetch(`${API_BASE}/auth/signin`, {
+                const res = await fetch(`auth/signin`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ login: username, password })
@@ -596,7 +596,7 @@
             }
 
             try {
-                const res = await fetch(`${API_BASE}/auth/login`, {
+                const res = await fetch(`auth/login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ login: username, password })
@@ -640,7 +640,7 @@
 
         async function loadCurrentUser() {
             try {
-                const res = await fetch(`${API_BASE}/user/me`, {
+                const res = await fetch(`user/me`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const user = await res.json();
@@ -659,7 +659,7 @@
             container.innerHTML = '<p class="loading">Loading products...</p>';
 
             try {
-                const res = await fetch(`${API_BASE}/product`, {
+                const res = await fetch(`product`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const data = await res.json();
@@ -684,12 +684,12 @@
         async function addToBasket(productId) {
             try {
                 // Ensure basket exists
-                await fetch(`${API_BASE}/user/basket`, {
+                await fetch(`user/basket`, {
                     method: 'POST',
                     headers: { 'Authorization': `Bearer ${token}` }
                 }).catch(() => {});
 
-                const res = await fetch(`${API_BASE}/user/basket/add-product/${productId}`, {
+                const res = await fetch(`user/basket/add-product/${productId}`, {
                     method: 'POST',
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
@@ -712,7 +712,7 @@
             container.innerHTML = '<p class="loading">Loading basket...</p>';
 
             try {
-                const res = await fetch(`${API_BASE}/user/basket`, {
+                const res = await fetch(`user/basket`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const basket = await res.json();
@@ -747,7 +747,7 @@
         async function updateQuantity(productId, quantity) {
             if (quantity < 0) quantity = 0;
             try {
-                await fetch(`${API_BASE}/user/basket/update-product/${productId}?quantity=${quantity}`, {
+                await fetch(`user/basket/update-product/${productId}?quantity=${quantity}`, {
                     method: 'PUT',
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
@@ -764,7 +764,7 @@
         async function clearBasket() {
             if (!confirm('Clear entire basket?')) return;
             try {
-                await fetch(`${API_BASE}/user/basket`, {
+                await fetch(`user/basket`, {
                     method: 'DELETE',
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
@@ -800,7 +800,7 @@
             }
 
             try {
-                const res = await fetch(`${API_BASE}/user/order`, {
+                const res = await fetch(`user/order`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -833,7 +833,7 @@
             container.innerHTML = '<p class="loading">Loading orders...</p>';
 
             try {
-                const res = await fetch(`${API_BASE}/user/order`, {
+                const res = await fetch(`user/order`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const data = await res.json();
@@ -871,7 +871,7 @@
         async function loadAdminProducts() {
             const container = document.getElementById('productsAdminContainer');
             try {
-                const res = await fetch(`${API_BASE}/product`, {
+                const res = await fetch(`product`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const data = await res.json();
@@ -895,7 +895,7 @@
             }
 
             try {
-                const res = await fetch(`${API_BASE}/product`, {
+                const res = await fetch(`product`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -920,7 +920,7 @@
         async function deleteProduct(id) {
             if (!confirm('Delete this product?')) return;
             try {
-                const res = await fetch(`${API_BASE}/product/${id}`, {
+                const res = await fetch(`product/${id}`, {
                     method: 'DELETE',
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
@@ -937,7 +937,7 @@
         async function loadAdminUsers() {
             const container = document.getElementById('usersContainer');
             try {
-                const res = await fetch(`${API_BASE}/user`, {
+                const res = await fetch(`user`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const data = await res.json();
@@ -968,7 +968,7 @@
         async function loadAdminOrders() {
             const container = document.getElementById('adminOrdersContainer');
             try {
-                const res = await fetch(`${API_BASE}/user/order`, {
+                const res = await fetch(`user/order`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const data = await res.json();
@@ -997,7 +997,7 @@
         async function updateOrderStatus(orderId, status) {
             if (!status) return;
             try {
-                const res = await fetch(`${API_BASE}/user/order/${orderId}`, {
+                const res = await fetch(`user/order/${orderId}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -1017,7 +1017,7 @@
         function connectSSE() {
             if (!token) return;
             try {
-                sseConnection = new EventSource(`${API_BASE}/user/order/sse?token=${token}`);
+                sseConnection = new EventSource(`user/order/sse?token=${token}`);
                 sseConnection.addEventListener('change-order-status', (event) => {
                     const data = JSON.parse(event.data);
                     showAlert(`Order #${data.orderId.substring(0, 8)} is now ${data.status}`, 'info');
